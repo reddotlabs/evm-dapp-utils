@@ -1,0 +1,10 @@
+{
+  "name": "root",
+  "private": true,
+  "devDependencies": {
+    "@types/chai": "^4.3.0",
+    "@types/mocha": "^9.1.0",
+    "lerna": "^4.0.0"
+  },
+  "dependencies": {}
+}

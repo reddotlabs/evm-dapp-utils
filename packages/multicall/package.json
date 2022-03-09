@@ -1,0 +1,63 @@
+{
+  "version": "0.1.0",
+  "license": "MIT",
+  "main": "dist/index.js",
+  "typings": "dist/index.d.ts",
+  "files": [
+    "dist",
+    "src"
+  ],
+  "engines": {
+    "node": ">=10"
+  },
+  "scripts": {
+    "start": "tsdx watch",
+    "build": "tsdx build",
+    "test": "tsdx test",
+    "lint": "tsdx lint",
+    "prepare": "tsdx build",
+    "size": "size-limit",
+    "analyze": "size-limit --why"
+  },
+  "peerDependencies": {},
+  "husky": {
+    "hooks": {
+      "pre-commit": "tsdx lint"
+    }
+  },
+  "prettier": {
+    "printWidth": 80,
+    "semi": true,
+    "singleQuote": true,
+    "trailingComma": "es5"
+  },
+  "name": "@reddotlabs/multicall",
+  "author": "ReddotLabs",
+  "module": "dist/multicall.esm.js",
+  "size-limit": [
+    {
+      "path": "dist/multicall.cjs.production.min.js",
+      "limit": "10 KB"
+    },
+    {
+      "path": "dist/multicall.esm.js",
+      "limit": "10 KB"
+    }
+  ],
+  "devDependencies": {
+    "@size-limit/preset-small-lib": "^7.0.8",
+    "chai": "^4.3.6",
+    "husky": "^7.0.4",
+    "size-limit": "^7.0.8",
+    "tsdx": "^0.14.1",
+    "tslib": "^2.3.1",
+    "typescript": "^4.6.2"
+  },
+  "dependencies": {
+    "@ethersproject/abi": "^5.0.0",
+    "@ethersproject/contracts": "^5.0.0",
+    "@ethersproject/providers": "^5.0.0",
+    "p-limit": "^2.3.0",
+    "yocto-queue": "^1.0.0"
+  }
+}
