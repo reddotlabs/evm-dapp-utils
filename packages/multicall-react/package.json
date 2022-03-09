@@ -1,5 +1,8 @@
 {
   "version": "0.1.0",
+  "publishConfig": {
+    "access": "public"
+  },
   "license": "MIT",
   "main": "dist/index.js",
   "typings": "dist/index.d.ts",
@@ -61,5 +64,6 @@
   "dependencies": {
     "@reddotlabs/multicall": "^0.1.0",
     "yocto-queue": "^1.0.0"
-  }
+  },
+  "gitHead": "3ff30d4ec20536b5933b236e0b8f041331a203e4"
 }
