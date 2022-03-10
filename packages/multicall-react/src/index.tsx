@@ -9,6 +9,7 @@ import {
 } from 'react';
 import { QueuedMulticall } from './queued-multicall';
 import { Call } from '@reddotlabs/multicall';
+export { QueuedMulticall } from './queued-multicall';
 
 const Context = createContext<QueuedMulticall>(null as any);
 
