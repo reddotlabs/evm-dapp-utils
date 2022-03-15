@@ -1,5 +1,5 @@
 {
-  "version": "0.1.2",
+  "version": "0.1.3",
   "publishConfig": {
     "access": "public"
   },
@@ -62,7 +62,7 @@
     "typescript": "^4.6.2"
   },
   "dependencies": {
-    "@reddotlabs/multicall": "^0.1.1",
+    "@reddotlabs/multicall": "^0.1.3",
     "yocto-queue": "^1.0.0"
   },
   "gitHead": "3ff30d4ec20536b5933b236e0b8f041331a203e4"
