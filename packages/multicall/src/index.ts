@@ -126,11 +126,15 @@ const multicallInterface = new Interface(MulticallAbi);
 export const multicall = async (
   provider: JsonRpcProvider,
   multicallAddress: string,
-  calls: Call[]
+  calls: Call[],
+  options?: { blockTag: number }
 ): Promise<CallResult[]> => {
   if (!calls || !calls.length) {
     return [];
   }
+
+  const blockTag =
+    options?.blockTag == null ? 'latest' : '0x' + options.blockTag.toString(16);
   try {
     const callData = calls.map(call => {
       return [call.target || call.contract?.address, encodeCallData(call)] as [
@@ -150,7 +154,7 @@ export const multicall = async (
           to: multicallAddress,
           data: aggregateData,
         },
-        'latest',
+        blockTag,
       ]);
       returnData = multicallInterface.decodeFunctionResult(
         'aggregate',
@@ -158,7 +162,7 @@ export const multicall = async (
       ).returnData;
     } catch (e) {
       console.warn('Multicall failed. Switch to single mode', e);
-      returnData = await singleCall(provider, callData);
+      returnData = await singleCall(provider, callData, blockTag);
     }
 
     return calls.map((call, index) => {
@@ -180,7 +184,8 @@ const limit = pLimit(4);
 
 const singleCall = async (
   provider: JsonRpcProvider,
-  calls: [string, string][]
+  calls: [string, string][],
+  blockTag: string
 ) => {
   const queries = calls.map(([target, callData]) =>
     limit(() =>
@@ -190,7 +195,7 @@ const singleCall = async (
             to: target,
             data: callData,
           },
-          'latest',
+          blockTag,
         ])
         .catch(e => {
           console.debug('callfailed', e, target);
