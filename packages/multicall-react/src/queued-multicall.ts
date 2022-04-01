@@ -55,14 +55,6 @@ export class QueuedMulticall {
       });
     }
 
-    console.info(
-      '[Multicall] process',
-      items.length,
-      'multicall request with total of',
-      processCalls.length,
-      'calls'
-    );
-
     processor(this.provider, this.multicallAddress, processCalls).then(
       (res: CallResult[]) => {
         let counter = 0;
@@ -79,7 +71,6 @@ export class QueuedMulticall {
   };
 
   public enqueue(calls: Call[]) {
-    console.info('[Multicall] Add', calls.length, 'to queue');
     return new Promise<CallResult[]>(resolve => {
       this.queue.enqueue({
         calls,

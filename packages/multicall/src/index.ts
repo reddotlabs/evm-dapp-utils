@@ -198,7 +198,7 @@ const singleCall = async (
           blockTag,
         ])
         .catch(e => {
-          console.debug('callfailed', e, target);
+          console.debug('Call failed', e, target);
           return null;
         })
     )
