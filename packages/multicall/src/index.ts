@@ -344,6 +344,9 @@ export interface CallResult extends Array<any> {
 }
 
 const decodeReturnData = (call: Call, data: any) => {
+  if (data == '0x') {
+    return [];
+  }
   const iface = call.contract
     ? call.contract.interface
     : call.abi
