@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { ReactNode } from 'react';
 import { JsonRpcProvider } from '@ethersproject/providers';
 import {
   createContext,
@@ -14,8 +14,9 @@ export { QueuedMulticall } from './queued-multicall';
 const Context = createContext<QueuedMulticall>(null as any);
 
 export const QueuedMulticallProvider: React.FC<{
-  rpcProvider: JsonRpcProvider;
+  rpcProvider: JsonRpcProvider | null | undefined;
   multicallAddress: string;
+  children: ReactNode;
 }> = ({ children, rpcProvider, multicallAddress }) => {
   const [queue, setQueue] = useState<QueuedMulticall>(null as any);
 
