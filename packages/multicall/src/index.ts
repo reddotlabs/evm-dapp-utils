@@ -1,76 +1,319 @@
 import { Interface, JsonFragment, Fragment } from '@ethersproject/abi';
 import { Contract } from '@ethersproject/contracts';
 import { JsonRpcProvider } from '@ethersproject/providers';
-import pLimit from 'p-limit';
+
+declare var __DEV__: boolean;
 
 const MulticallAbi = [
   {
     inputs: [
       {
         components: [
-          { internalType: 'address', name: 'target', type: 'address' },
-          { internalType: 'bytes', name: 'callData', type: 'bytes' },
+          {
+            internalType: 'address',
+            name: 'target',
+            type: 'address',
+          },
+          {
+            internalType: 'bytes',
+            name: 'callData',
+            type: 'bytes',
+          },
         ],
-        internalType: 'struct Multicall.Call[]',
+        internalType: 'struct Multicall2.Call[]',
         name: 'calls',
         type: 'tuple[]',
       },
     ],
     name: 'aggregate',
     outputs: [
-      { internalType: 'uint256', name: 'blockNumber', type: 'uint256' },
-      { internalType: 'bytes[]', name: 'returnData', type: 'bytes[]' },
+      {
+        internalType: 'uint256',
+        name: 'blockNumber',
+        type: 'uint256',
+      },
+      {
+        internalType: 'bytes[]',
+        name: 'returnData',
+        type: 'bytes[]',
+      },
     ],
     stateMutability: 'nonpayable',
     type: 'function',
   },
   {
-    inputs: [{ internalType: 'uint256', name: 'blockNumber', type: 'uint256' }],
+    inputs: [
+      {
+        components: [
+          {
+            internalType: 'address',
+            name: 'target',
+            type: 'address',
+          },
+          {
+            internalType: 'bytes',
+            name: 'callData',
+            type: 'bytes',
+          },
+        ],
+        internalType: 'struct Multicall2.Call[]',
+        name: 'calls',
+        type: 'tuple[]',
+      },
+    ],
+    name: 'blockAndAggregate',
+    outputs: [
+      {
+        internalType: 'uint256',
+        name: 'blockNumber',
+        type: 'uint256',
+      },
+      {
+        internalType: 'bytes32',
+        name: 'blockHash',
+        type: 'bytes32',
+      },
+      {
+        components: [
+          {
+            internalType: 'bool',
+            name: 'success',
+            type: 'bool',
+          },
+          {
+            internalType: 'bytes',
+            name: 'returnData',
+            type: 'bytes',
+          },
+        ],
+        internalType: 'struct Multicall2.Result[]',
+        name: 'returnData',
+        type: 'tuple[]',
+      },
+    ],
+    stateMutability: 'nonpayable',
+    type: 'function',
+  },
+  {
+    inputs: [
+      {
+        internalType: 'uint256',
+        name: 'blockNumber',
+        type: 'uint256',
+      },
+    ],
     name: 'getBlockHash',
-    outputs: [{ internalType: 'bytes32', name: 'blockHash', type: 'bytes32' }],
+    outputs: [
+      {
+        internalType: 'bytes32',
+        name: 'blockHash',
+        type: 'bytes32',
+      },
+    ],
+    stateMutability: 'view',
+    type: 'function',
+  },
+  {
+    inputs: [],
+    name: 'getBlockNumber',
+    outputs: [
+      {
+        internalType: 'uint256',
+        name: 'blockNumber',
+        type: 'uint256',
+      },
+    ],
     stateMutability: 'view',
     type: 'function',
   },
   {
     inputs: [],
     name: 'getCurrentBlockCoinbase',
-    outputs: [{ internalType: 'address', name: 'coinbase', type: 'address' }],
+    outputs: [
+      {
+        internalType: 'address',
+        name: 'coinbase',
+        type: 'address',
+      },
+    ],
     stateMutability: 'view',
     type: 'function',
   },
   {
     inputs: [],
     name: 'getCurrentBlockDifficulty',
-    outputs: [{ internalType: 'uint256', name: 'difficulty', type: 'uint256' }],
+    outputs: [
+      {
+        internalType: 'uint256',
+        name: 'difficulty',
+        type: 'uint256',
+      },
+    ],
     stateMutability: 'view',
     type: 'function',
   },
   {
     inputs: [],
     name: 'getCurrentBlockGasLimit',
-    outputs: [{ internalType: 'uint256', name: 'gaslimit', type: 'uint256' }],
+    outputs: [
+      {
+        internalType: 'uint256',
+        name: 'gaslimit',
+        type: 'uint256',
+      },
+    ],
     stateMutability: 'view',
     type: 'function',
   },
   {
     inputs: [],
     name: 'getCurrentBlockTimestamp',
-    outputs: [{ internalType: 'uint256', name: 'timestamp', type: 'uint256' }],
+    outputs: [
+      {
+        internalType: 'uint256',
+        name: 'timestamp',
+        type: 'uint256',
+      },
+    ],
     stateMutability: 'view',
     type: 'function',
   },
   {
-    inputs: [{ internalType: 'address', name: 'addr', type: 'address' }],
+    inputs: [
+      {
+        internalType: 'address',
+        name: 'addr',
+        type: 'address',
+      },
+    ],
     name: 'getEthBalance',
-    outputs: [{ internalType: 'uint256', name: 'balance', type: 'uint256' }],
+    outputs: [
+      {
+        internalType: 'uint256',
+        name: 'balance',
+        type: 'uint256',
+      },
+    ],
     stateMutability: 'view',
     type: 'function',
   },
   {
     inputs: [],
     name: 'getLastBlockHash',
-    outputs: [{ internalType: 'bytes32', name: 'blockHash', type: 'bytes32' }],
+    outputs: [
+      {
+        internalType: 'bytes32',
+        name: 'blockHash',
+        type: 'bytes32',
+      },
+    ],
     stateMutability: 'view',
+    type: 'function',
+  },
+  {
+    inputs: [
+      {
+        internalType: 'bool',
+        name: 'requireSuccess',
+        type: 'bool',
+      },
+      {
+        components: [
+          {
+            internalType: 'address',
+            name: 'target',
+            type: 'address',
+          },
+          {
+            internalType: 'bytes',
+            name: 'callData',
+            type: 'bytes',
+          },
+        ],
+        internalType: 'struct Multicall2.Call[]',
+        name: 'calls',
+        type: 'tuple[]',
+      },
+    ],
+    name: 'tryAggregate',
+    outputs: [
+      {
+        components: [
+          {
+            internalType: 'bool',
+            name: 'success',
+            type: 'bool',
+          },
+          {
+            internalType: 'bytes',
+            name: 'returnData',
+            type: 'bytes',
+          },
+        ],
+        internalType: 'struct Multicall2.Result[]',
+        name: 'returnData',
+        type: 'tuple[]',
+      },
+    ],
+    stateMutability: 'nonpayable',
+    type: 'function',
+  },
+  {
+    inputs: [
+      {
+        internalType: 'bool',
+        name: 'requireSuccess',
+        type: 'bool',
+      },
+      {
+        components: [
+          {
+            internalType: 'address',
+            name: 'target',
+            type: 'address',
+          },
+          {
+            internalType: 'bytes',
+            name: 'callData',
+            type: 'bytes',
+          },
+        ],
+        internalType: 'struct Multicall2.Call[]',
+        name: 'calls',
+        type: 'tuple[]',
+      },
+    ],
+    name: 'tryBlockAndAggregate',
+    outputs: [
+      {
+        internalType: 'uint256',
+        name: 'blockNumber',
+        type: 'uint256',
+      },
+      {
+        internalType: 'bytes32',
+        name: 'blockHash',
+        type: 'bytes32',
+      },
+      {
+        components: [
+          {
+            internalType: 'bool',
+            name: 'success',
+            type: 'bool',
+          },
+          {
+            internalType: 'bytes',
+            name: 'returnData',
+            type: 'bytes',
+          },
+        ],
+        internalType: 'struct Multicall2.Result[]',
+        name: 'returnData',
+        type: 'tuple[]',
+      },
+    ],
+    stateMutability: 'nonpayable',
     type: 'function',
   },
 ];
@@ -127,7 +370,7 @@ export const multicall = async (
   provider: JsonRpcProvider,
   multicallAddress: string,
   calls: Call[],
-  options?: { blockTag: number }
+  options?: { blockTag: number; requireSuccess?: boolean }
 ): Promise<CallResult[]> => {
   if (!calls || !calls.length) {
     return [];
@@ -144,64 +387,37 @@ export const multicall = async (
     });
 
     let returnData: any;
-    try {
-      const aggregateData = multicallInterface.encodeFunctionData('aggregate', [
-        callData,
-      ]);
+    const aggregateData = multicallInterface.encodeFunctionData(
+      'tryAggregate',
+      [options?.requireSuccess || false, callData]
+    );
 
-      const response = await provider.send('eth_call', [
-        {
-          to: multicallAddress,
-          data: aggregateData,
-        },
-        blockTag,
-      ]);
-      returnData = multicallInterface.decodeFunctionResult(
-        'aggregate',
-        response
-      ).returnData;
-    } catch (e) {
-      console.warn('Multicall failed. Switch to single mode', e);
-      returnData = await singleCall(provider, callData, blockTag);
-    }
+    const response = await provider.send('eth_call', [
+      {
+        to: multicallAddress,
+        data: aggregateData,
+      },
+      blockTag,
+    ]);
+
+    returnData = multicallInterface.decodeFunctionResult(
+      'tryAggregate',
+      response
+    ).returnData;
 
     return calls.map((call, index) => {
-      const data = returnData[index];
-      if (!data) {
-        console.warn('The call ', call, 'failed and return null data');
+      const [success, returnDatum] = returnData[index];
+      if (!success) {
+        if (__DEV__) {
+          console.warn('The call ', call, 'failed and return null data');
+        }
         return [];
       } else {
-        return decodeReturnData(call, returnData[index]);
+        return decodeReturnData(call, returnDatum);
       }
     });
   } catch (e) {
     console.warn('Multicall error', e);
     throw new Error('Multicall failed');
   }
-};
-
-const limit = pLimit(4);
-
-const singleCall = async (
-  provider: JsonRpcProvider,
-  calls: [string, string][],
-  blockTag: string
-) => {
-  const queries = calls.map(([target, callData]) =>
-    limit(() =>
-      provider
-        .send('eth_call', [
-          {
-            to: target,
-            data: callData,
-          },
-          blockTag,
-        ])
-        .catch(e => {
-          console.debug('Call failed', e, target);
-          return null;
-        })
-    )
-  );
-  return await Promise.all(queries);
 };

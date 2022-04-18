@@ -59,7 +59,6 @@
     "@ethersproject/abi": "^5.0.0",
     "@ethersproject/contracts": "^5.0.0",
     "@ethersproject/providers": "^5.0.0",
-    "p-limit": "^2.3.0",
     "yocto-queue": "^1.0.0"
   },
   "gitHead": "3ff30d4ec20536b5933b236e0b8f041331a203e4"
